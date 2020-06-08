@@ -1,0 +1,200 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "APIManagementInstanceName": {
+          "type": "string",
+          "defaultValue": "yraksdemo"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versionsetversionedapi')]",
+            "type": "Microsoft.ApiManagement/service/api-version-sets",
+            "apiVersion": "2017-03-01",
+            "properties": {
+                "description": "Version set for versioned API blog post",
+                "versionQueryName": "api-version",
+                "displayName": "Versioned API",
+                "versioningScheme": "query"
+            }
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "displayName": "Versioned API",
+                "apiRevision": "1",
+                "description": "Wikipedia for Web APIs. Repository of API specs in OpenAPI(fka Swagger) 2.0 format.\n\n**Warning**: If you want to be notified about changes in advance please subscribe to our [Gitter channel](https://gitter.im/APIs-guru/api-models).\n\nClient sample: [[Demo]](https://apis.guru/simple-ui) [[Repo]](https://github.com/APIs-guru/simple-ui)\n",
+                "serviceUrl": "https://api.apis.guru/v2/",
+                "path": "versioned-api",
+                "protocols": [
+                    "https"
+                ],
+                "authenticationSettings": null,
+                "subscriptionKeyParameterNames": null,
+                "apiVersion": "v1",
+                "apiVersionSetId": "[concat(resourceId('Microsoft.ApiManagement/service', parameters('APIManagementInstanceName')), '/api-version-sets/versionsetversionedapi')]"
+            },
+            "dependsOn": [
+                "[concat(resourceId('Microsoft.ApiManagement/service', parameters('APIManagementInstanceName')), '/api-version-sets/versionsetversionedapi')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api-v2')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "displayName": "Versioned API",
+                "apiRevision": "1",
+                "description": "Wikipedia for Web APIs. Repository of API specs in OpenAPI(fka Swagger) 2.0 format.\n\n**Warning**: If you want to be notified about changes in advance please subscribe to our [Gitter channel](https://gitter.im/APIs-guru/api-models).\n\nClient sample: [[Demo]](https://apis.guru/simple-ui) [[Repo]](https://github.com/APIs-guru/simple-ui)\n",
+                "serviceUrl": "https://api.apis.guru/v2/",
+                "path": "versioned-api",
+                "protocols": [
+                    "https"
+                ],
+                "authenticationSettings": null,
+                "subscriptionKeyParameterNames": null,
+                "apiVersion": "v2",
+                "apiVersionSetId": "[concat(resourceId('Microsoft.ApiManagement/service', parameters('APIManagementInstanceName')), '/api-version-sets/versionsetversionedapi')]"
+            },
+            "dependsOn": [
+                "[concat(resourceId('Microsoft.ApiManagement/service', parameters('APIManagementInstanceName')), '/api-version-sets/versionsetversionedapi')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/products/apis",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/contosoproduct/versioned-api')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {},
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/products/apis",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/contosoproduct/versioned-api-v2')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {},
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api-v2')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api/getMetrics')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "displayName": "Get basic metrics",
+                "method": "GET",
+                "urlTemplate": "/metrics",
+                "templateParameters": [],
+                "description": "Some basic metrics for the entire directory.\nJust stunning numbers to put on a front page and are intended purely for WoW effect :)\n",
+                "responses": [
+                    {
+                        "statusCode": 200,
+                        "description": "OK",
+                        "headers": []
+                    }
+                ],
+                "policies": null
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api/listAPIs')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "displayName": "List all APIs",
+                "method": "GET",
+                "urlTemplate": "/list",
+                "templateParameters": [],
+                "description": "List all APIs in the directory.\nReturns links to OpenAPI specification for each API in the directory.\nIf API exist in multiple versions `preferred` one is explicitly marked.\n\nSome basic info from OpenAPI spec is cached inside each object.\nThis allows to generate some simple views without need to fetch OpenAPI spec for each API.\n",
+                "responses": [
+                    {
+                        "statusCode": 200,
+                        "description": "OK",
+                        "headers": []
+                    }
+                ],
+                "policies": null
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api-v2/listAPIs')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "displayName": "List all APIs",
+                "method": "GET",
+                "urlTemplate": "/list",
+                "templateParameters": [],
+                "description": "List all APIs in the directory.\nReturns links to OpenAPI specification for each API in the directory.\nIf API exist in multiple versions `preferred` one is explicitly marked.\n\nSome basic info from OpenAPI spec is cached inside each object.\nThis allows to generate some simple views without need to fetch OpenAPI spec for each API.\n",
+                "responses": [
+                    {
+                        "statusCode": 200,
+                        "description": "OK",
+                        "headers": []
+                    }
+                ],
+                "policies": null
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api-v2')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api/getMetrics/policy')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "policyContent": "[concat('<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Position the <base> element within a section element to inherit all policies from the corresponding section element in the enclosing scope.\r\n    - Remove the <base> element to prevent inheriting policies from the corresponding section element in the enclosing scope.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound>\r\n    <base />\r\n    <set-backend-service base-url=\"https://api.apis.guru/v2/\" />\r\n    <rewrite-uri template=\"/metrics.json\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api')]",
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('APIManagementInstanceName'), 'versioned-api', 'getMetrics')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api/listAPIs/policy')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "policyContent": "[concat('<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Position the <base> element within a section element to inherit all policies from the corresponding section element in the enclosing scope.\r\n    - Remove the <base> element to prevent inheriting policies from the corresponding section element in the enclosing scope.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound>\r\n    <base />\r\n    <set-backend-service base-url=\"https://api.apis.guru/v2\" />\r\n    <rewrite-uri template=\"/list.json\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api')]",
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('APIManagementInstanceName'), 'versioned-api', 'listAPIs')]"
+            ]
+        },
+        {
+            "type": "Microsoft.ApiManagement/service/apis/operations/policies",
+            "name": "[concat(parameters('APIManagementInstanceName'), '/versioned-api-v2/listAPIs/policy')]",
+            "apiVersion": "2017-03-01",
+            "scale": null,
+            "properties": {
+                "policyContent": "[concat('<!--\r\n    IMPORTANT:\r\n    - Policy elements can appear only within the <inbound>, <outbound>, <backend> section elements.\r\n    - Only the <forward-request> policy element can appear within the <backend> section element.\r\n    - To apply a policy to the incoming request (before it is forwarded to the backend service), place a corresponding policy element within the <inbound> section element.\r\n    - To apply a policy to the outgoing response (before it is sent back to the caller), place a corresponding policy element within the <outbound> section element.\r\n    - To add a policy position the cursor at the desired insertion point and click on the round button associated with the policy.\r\n    - To remove a policy, delete the corresponding policy statement from the policy document.\r\n    - Position the <base> element within a section element to inherit all policies from the corresponding section element in the enclosing scope.\r\n    - Remove the <base> element to prevent inheriting policies from the corresponding section element in the enclosing scope.\r\n    - Policies are applied in the order of their appearance, from the top down.\r\n-->\r\n<policies>\r\n  <inbound>\r\n    <base />\r\n    <set-backend-service base-url=\"https://api.apis.guru/v2\" />\r\n    <rewrite-uri template=\"/list.json\" />\r\n  </inbound>\r\n  <backend>\r\n    <base />\r\n  </backend>\r\n  <outbound>\r\n    <base />\r\n  </outbound>\r\n  <on-error>\r\n    <base />\r\n  </on-error>\r\n</policies>')]"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.ApiManagement/service/apis', parameters('APIManagementInstanceName'), 'versioned-api-v2')]",
+                "[resourceId('Microsoft.ApiManagement/service/apis/operations', parameters('APIManagementInstanceName'), 'versioned-api-v2', 'listAPIs')]"
+            ]
+        }
+    ]
