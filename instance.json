@@ -16,11 +16,11 @@
       },
       "PublisherName": {
         "type": "string",
-        "defaultValue": "Eldert Grootenboer"
+        "defaultValue": "Yusuf Rangwala"
       },
       "PublisherEmail": {
         "type": "string",
-        "defaultValue": "me@mydomain.com"
+        "defaultValue": "yusuf.rangwala@microsoft.com"
       }
     },
     "variables": {},
@@ -28,7 +28,7 @@
       {
         "type": "Microsoft.ApiManagement/service",
         "name": "[parameters('APIManagementInstanceName')]",
-        "apiVersion": "2017-03-01",
+        "apiVersion": "2019-12-01",
         "properties": {
           "publisherEmail": "[parameters('PublisherEmail')]",
           "publisherName": "[parameters('PublisherName')]",
